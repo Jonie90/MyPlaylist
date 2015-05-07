@@ -1,0 +1,105 @@
+<!doctype html>
+<html data-ng-app="myApp">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="author" content="Karolin Jonsson" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>My Playlist</title>
+		<meta name="description" content="Create your own playlist using data from LastFM">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+	    <script src="js/main.js"></script>
+		<link rel="stylesheet" href="css/stylesheet.css" type="text/css" media="screen" title="Playlist"/>
+		<link rel="shortcut icon" href="images/myPlaylist_white.ico"/>
+  	</head>
+  	<body>
+		<div data-ng-app="myApp" data-ng-controller="MyPlaylistController" id="main_container"> 
+		<header>
+			<div id="headerBottom">
+
+				<!-- ......................... -->
+				<!-- ......... SEARCH ........ -->
+				<!-- ......................... -->
+			
+				<button data-ng-click="showPlaylist();" data-ng-class="{'btn' : !toggle, 'btn-active' : toggle}"></button>
+				<form id="search">
+							<input type="text" data-ng-model="artist" name="Artist" placeholder="Search for artist..." id="searchInput" class="ellipsis" data-ng-change="search()"/>
+				</form>
+			</div>
+		</header>
+		<div id="mainContainer">
+			<div id="resultContainer" data-ng-show="showResultContainer">
+				<h2 class="trackName ellipsis"> <a href="#" data-ng-click="search()" class="goBack" data-ng-show="showBack"> </a>		{{artists_tracks}}		</h2>
+				<div class="artists">
+				
+					<ul>
+			  			<li data-ng-repeat="artist in artists">
+			    			<div class="resultArtistName"><a href="#"  data-ng-click="getTracksSearch(artist.name)"><p class="ellipsis">		{{ artist.name }} 	</p></a></div>
+
+			  			</li>
+					</ul>
+					<p class="resultArtistName ellipsis"> {{requestError}} </p>
+				</div>
+					<ul>
+			  			<li  data-ng-repeat="track in tracks">
+			  				<div class="tracks">
+			  					<div class="aTrack">		    			
+					  				<div class="resultTrackName"><p class="ellipsis"> {{ track.name }} </p></div> <p><a href=""  data-ng-click="addToPlaylist(track)" class="add bold" data-scroll-to="scrollTo(track-{{$index}})" > 	+ 		</a> {{requestError}}</p>
+			  					</div>
+		  					</div>
+			  			</li>
+			  		</ul>
+			</div>
+								
+			<!-- ......................... -->
+			<!-- ....... PLAYLIST ........ -->
+			<!-- ......................... -->			
+
+			<div id="myPlaylist" data-ng-show="show">
+				<div class="tracks">		
+					<div class="aTrack">
+						<div class="playlistTitle">		    			
+							<h2 class="trackName ellipsis">		My Playlist 	</h2>
+						</div> 
+						<form class="artistName">
+						<input type="text" data-ng-model="searchTrack" data-ng-init="searchTrack=''" name="searchTrack" placeholder="Search for track..." id="searchTrackInput"/>
+						</form>
+					</div>
+				</div>
+
+				<ul>
+					<li class="noBorder">
+						<div class="tracks">		
+							<div class="aTrack">		    			
+					    		<div class="trackName bold">
+						    		<p class = "ellipsis"><a href="" data-ng-click="orderByTrack()" data-ng-class="{'trackSort_sorted' : ascending, 'trackSort_sorted_reverse' : !ascending, 'noSort' : artistHasBeenClicked}">		Track 	</a></p> 
+						    	</div>
+						    	<div class="artistName bold">
+						    		<p class="ellipsis"><a href="" data-ng-click="orderByArtist()" data-ng-class="{'artistSort_sorted' : ascendingArtists, 'artistSort_sorted_reverse' : !ascendingArtists, 'noSort' : trackHasBeenClicked}">	Artist 	</a> </p>
+						    	</div>
+							</div>
+						</div>
+					</li>
+					<li data-ng-repeat="track in playlist | filter:{name: searchTrack} | index | orderBy:predicate">
+						<div class="tracks">		
+							<div class="aTrack">		    			
+			    				<div class="trackName">
+				    				<p class="ellipsis">	{{track.name}}	</p>
+				    			</div>
+				    			<div class="artistName">
+				    				<a href="#"  data-ng-click="getTracksPlaylist(track.artist.name)"><p class="ellipsis">	{{track.artist.name}}	</p></a>
+				    			</div> 
+				    			<p><a href="" data-ng-click="removeFromPlaylist(track.index)" class="remove bold" data-scroll-to="scrollTo(track-{{track.index}})">	 - 		</a></p>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		</div>
+		<footer>
+			<p>&copy; K Jonsson 2015</p>
+		</footer>
+	</body>
+</html>
+
